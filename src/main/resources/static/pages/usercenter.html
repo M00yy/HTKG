@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户中心</title>
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
+    <script src="../jquery/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="../bootstrap-table/bootstrap-table.css">
+    <script src="../bootstrap-table/bootstrap-table.js"></script>
+    <script src="../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../toastr/toastr.min.css">
+    <script src="../toastr/toastr.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <!--    <div class="row"><h3>个人信息</h3></div>-->
+    <div class="row">
+        <div class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">昵称：</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="nickname"
+                           placeholder="请输入昵称">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">所在公司：</label>
+                <div class="col-sm-10">
+                    <select type="text" class="form-control" id="company">
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">性别：</label>
+                <div class="col-sm-10">
+                    <select type="text" class="form-control" id="gender">
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">电话：</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="phone"
+                           placeholder="请输入手机号">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">电子邮箱：</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="email"
+                           placeholder="请输入电子邮箱">
+                </div>
+            </div>
+            <div class="row col-sm-12 pull-right">
+                <div class="pull-right">
+                    <button class="btn btn-default">重置</button>
+                    <button class="btn btn-info" id="updatePersonBtn">确定</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script>
+    var t_user_id;
+    $(document).ready(function () {
+        getUserInfo();
+        getCompany();
+        $("#updatePersonBtn").click(function () {
+            $.ajax({
+                url: "/person/updatePerson",
+                type: "post",
+                dataType: "json",
+                data: {
+                    t_user_id: t_user_id,
+                    t_com_id: $("#company").val(),
+                    t_gender: $("#gender").val(),
+                    t_mobile: $("#phone").val(),
+                    t_email: $("#email").val(),
+                    t_cname: $("#nickname").val()
+                },
+                success: function (result) {
+                    if (result.error === 0) {
+                        toastr.success(result.msg);
+                    }
+                }
+            })
+        })
+    })
+
+
+    function getUserInfo() {
+        $.ajax({
+            url: "/user/getUserInfo",
+            type: "post",
+            dataType: "json",
+            //接受到相应，网路通畅
+            success: function (result) {
+                // alert(JSON.stringify(result));
+                t_user_id = result.t_user_id;
+                $.ajax({
+                    url: "/person/selectPersonById",
+                    type: "get",
+                    dataType: "json",
+                    data: {
+                        t_user_id: result.t_user_id,
+                    },
+                    success: function (res) {
+                        // alert(JSON.stringify(res));
+
+                        $("#nickname").val(res.t_cname);
+                        $("#company").val(res.t_com_id);
+                        $("#phone").val(res.t_mobile);
+                        $("#gender").val(res.t_gender);
+                        $("#email").val(res.t_email);
+                    }
+                })
+
+            },
+            error: function () {
+
+            }
+        })
+    }
+
+    function getCompany() {
+        var str = "<option value=''>-</option>";
+        $.ajax({
+            url: "/com/selectAllCompany",
+            type: "get",
+            dataType: "json",
+            success: function (result) {
+                // alert(JSON.stringify(result))
+                for (var i = 0; i < result.length; i++) {
+                    str += "<option value='" + result[i].t_com_id + "'>" + result[i].t_com_name + "</option>";
+                }
+                $("#company").html(str);
+            }
+        })
+    }
+</script>
+</body>
+</html>

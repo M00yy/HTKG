@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>公司管理</title>
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
+    <script src="../jquery/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="../bootstrap-table/bootstrap-table.css">
+    <script src="../bootstrap-table/bootstrap-table.js"></script>
+    <script src="../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../toastr/toastr.min.css">
+    <script src="../toastr/toastr.min.js"></script>
+    <title>Title</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div id="toolbar" class="row container-fluid">
+        <div class="form-inline">
+            <div class="form-group">
+                <button class="btn btn-info" id="addBtn">添加</button>
+            </div>
+        </div>
+    </div>
+    <div class="row col-sm-12">
+        <table id="mytable"></table>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    编辑公司信息 </h4>
+            </div>
+            <div style="width: 80%">
+                <div class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">公司名字：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="name"
+                                   placeholder="请输入公司名称">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">？？？：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="buzhidao"
+                                   placeholder="请输入？？？">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">公司地址：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="address"
+                                   placeholder="请输入公司地址">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">注册日期：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="regdate"
+                                   placeholder="请输入注册日期">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">注册资本：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="regmoney"
+                                   placeholder="请输入注册资本">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">公司经理：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="manager"
+                                   placeholder="请输入公司经理">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="confrimOk">
+                    确定
+                </button>
+            </div>
+        </div><!-- /.modal-content --></div><!-- /.modal -->
+</div>
+
+<!--添加数据字典模态框-->
+<div class="modal fade" id="add" tabindex="-1" role="dialog"
+     aria-labelledby="myaddModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="mycomModalLabel">
+                    添加公司财务数据 </h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">公司名称：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="t_com_name"
+                                   placeholder="请输公司名称">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">？？？：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="t_com_org"
+                                   placeholder="请输入">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">公司地址：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="t_address"
+                                   placeholder="请输公司地址">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">注册日期：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="t_zhuceriqi"
+                                   placeholder="请输入注册日期">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">注册资本：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="t_zhuciziben"
+                                   placeholder="请输入注册资本">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">公司经理：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="t_faren"
+                                   placeholder="请输入公司经理">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="conOK">
+                    确定
+                </button>
+            </div>
+        </div><!-- /.modal-content --></div><!-- /.modal -->
+</div>
+</body>
+<script>
+
+    var company_name;
+    var company_id;
+
+    $(document).ready(function () {
+
+        initTable();
+
+        $("#addBtn").click(function () {
+            $("#add").modal("show");
+        })
+
+    })
+
+
+    function getCompanyInfo() {
+        $.ajax({
+            url: "/com/selectCompanyByName",
+            type: "post",
+            dataType: "json",
+            //接受到相应，网路通畅
+            data: {
+                t_com_name: company_name
+            },
+            success: function (result) {
+                // alert(JSON.stringify(result));
+                company_id = result.t_com_id;
+                // console.log(result);
+                $("#name").val(result.t_com_name);
+                $("#buzhidao").val(result.t_org_code);
+                $("#address").val(result.t_address);
+                $("#regdate").val(result.t_zhuceriqi);
+                $("#regmoney").val(result.t_zhuciziben);
+                $("#manager").val(result.t_faren);
+
+            },
+            error: function () {
+
+            }
+        })
+    }
+
+
+    $("#confrimOk").click(function () {
+        $.ajax({
+            url: "/com/updateCompany",
+            type: "post",
+            dataType: "json",
+            data: {
+                t_com_name: $("#name").val(),
+                t_org_code: $("#buzhidao").val(),
+                t_address: $("#address").val(),
+                t_zhuceriqi: $("#regdate").val(),
+                t_zhuciziben: $("#regmoney").val(),
+                t_faren: $("#manager").val()
+            },
+            success: function (result) {
+                if (result.error === 0) {
+                    $("#myModal").modal("hide");
+                    toastr.success(result.msg);
+                    initTable();
+                }
+            }
+        })
+    })
+
+    $("#conOK").click(function () {
+        $.ajax({
+            url: "/com/insertCompany",
+            type: "post",
+            dataType: "json",
+            data: {
+                t_com_name: $("#t_com_name").val(),
+                t_org_code: $("#t_com_org").val(),
+                t_address: $("#t_address").val(),
+                t_zhuceriqi: $("#t_zhuceriqi").val(),
+                t_zhuciziben: $("#t_zhuciziben").val(),
+                t_faren: $("#t_faren").val()
+            },
+            success: function (result) {
+                if (result.error === 0) {
+                    $("#add").modal("hide");
+                    toastr.success(result.msg);
+                    initTable();
+                }
+            }
+        })
+    })
+
+    function initTable() {
+        //销毁表格
+        $("#mytable").bootstrapTable("destroy");
+        $("#mytable").bootstrapTable({
+            url: "/com/selectAllCompany",
+            method: 'GET', //请求方式（*）
+            // queryParams: queryParams,
+            // toolbar: '#toolbar',              //工具按钮用哪个容器
+            striped: true, //是否显示行间隔色
+            cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true, //是否显示分页（*）
+            sortable: true, //是否启用排序
+            sortOrder: "asc", //排序方式
+            sidePagination: "client", //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1, //初始化加载第一页，默认第一页,并记录
+            pageSize: 5, //每页的记录行数（*）
+            pageList: [5, 10, 20], //可供选择的每页的行数（*）
+            smartDisplay: true,//显示设置每页条数
+            search: true, //是否显示表格搜索,模糊查询
+            strictSearch: false,//精确查询
+            // silent : true,// 刷新事件必须设置
+            showColumns: true, //是否显示所有的列（选择显示的列）
+            showRefresh: true, //是否显示刷新按钮
+            minimumCountColumns: 2, //最少允许的列数
+            clickToSelect: true, //是否启用点击选中行
+
+            //height: 1000,                      //表格高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "t_com_id", //每一行的唯一标识，一般为主键列
+            showToggle: false, //是否显示详细视图和列表视图的切换按钮
+            cardView: false, //是否显示详细视图
+            detailView: false, //是否显示父子表
+            clickToSelect: true,    //是否启用点击选中行
+            columns: [
+
+                {
+                    checkbox: true,
+                    width: 30,
+                },
+                {
+                    field: 't_com_name',
+                    title: '公司名字',
+                    sortable: true,
+                    width: 100,
+                    align: 'center',
+                    valign: 'middle',
+
+                },
+                {
+                    field: 't_org_code',
+                    title: '???',
+                    sortable: true,
+                    width: 50,
+                    align: 'center',
+                    valign: 'middle',
+                },
+                {
+                    field: 't_address',
+                    title: '公司地址',
+                    width: 100,
+                    align: 'center',
+                    sortable: true,
+                    valign: 'middle',
+                },
+                {
+                    field: 't_zhuceriqi',
+                    title: '注册日期',
+                    sortable: true,
+                    width: 75,
+                    align: 'center',
+                    valign: 'middle',
+                },
+                {
+                    field: 't_zhuceziben',
+                    title: '注册资本',
+                    sortable: true,
+                    width: 75,
+                    align: 'center',
+                    valign: 'middle',
+                },
+                {
+                    field: 't_faren',
+                    title: '公司经理',
+                    sortable: true,
+                    width: 50,
+                    align: 'center',
+                    valign: 'middle',
+                },
+                {
+                    title: '操作',
+                    width: 100,
+                    align: 'center',
+                    valign: 'middle',
+                    events: operateEvents,
+                    formatter: function (value, row, index) {
+                        //判断用户的审核状态
+                        return "<button id='editbutton' class='btn btn-success btn-sm editbutton'>编辑</button><button class='btn btn-warning btn-sm delbutton'>删除</button>"
+
+                    }
+                }
+            ]
+        })
+
+    }
+
+    window.operateEvents = {
+        'click .editbutton': function (e, value, row, index) {
+            company_name = row.t_com_name;
+            $("#myModal").modal("show");
+            getCompanyInfo();
+        },
+        'click .delbutton': function (e, value, row, index) {
+            company_name = row.t_com_name;
+            $.ajax({
+                url: "/com/deleteCompany",
+                type: "post",
+                dataType: "json",
+                data: {
+                    t_com_name: company_name
+                },
+                success: function (result) {
+                    if (result.error === 0) {
+                        toastr.success(result.msg);
+                        initTable();
+                    }
+                }
+            })
+        }
+    }
+
+</script>
+</html>

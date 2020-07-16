@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>moneyin</title>
+    <script src="../jquery/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <!--    <script src="../bootstrap-treeview/bootstrap-treeview.min.js"></script>-->
+    <script src="../bootstrap/js/bootstrap-treeview.min.js"></script>
+    <script src="../echarts/echarts.min.js"></script>
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap-treeview.min.css">
+
+
+    <!--    <link rel="stylesheet" href="../bootstrap-treeview/bootstrap-treeview.min.css">-->
+    <style>
+        .main-container {
+            margin: 20px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="main-container">
+    <div class="row">
+        <div class="col-md-6" id="mychart1" style="height: 250px"></div>
+        <div class="col-md-6"></div>
+    </div>
+</div>
+<script>
+    //echart饼状图，环状图，柱形图，折线图。。。。。
+    $(function () {
+        var r;
+        $.get({
+            url: "../json/money.json",
+            datatype: "json",
+            success: function (result) {
+                //alert(JSON.stringify(result));
+                r = result;
+                var source = new Array();
+                for (var i = 0; i < result.length; i++) {
+                    source[i] = new Array();
+                    source[i][0] = result[i].time;
+                    source[i][1] = result[i].money;
+                    //source[i][2] = 3000;
+                }
+                // alert(source[0][1])
+                var myChart1 = echarts.init($("#mychart1").get(0));
+                myChart1.setOption({
+                    dataset: {
+                        // 提供一份数据。
+                        source: source
+                    },
+                    color: ['#0099ff', '#ffff00', '#00ddff', '#ff00ff', '#00ff00', '#0000ff'],
+                    // 声明一个 X 轴，类目轴（category）。默认情况下，类目轴对应到 dataset 第一列。
+                    title: {
+                        text: '收入示意图'
+                    },
+                    itemStyle: {
+                        // 阴影的大小
+                        shadowBlur: 60,
+                        // 阴影水平方向上的偏移
+                        shadowOffsetX: 0,
+                        // 阴影垂直方向上的偏移
+                        shadowOffsetY: 0,
+                        // 阴影颜色
+                        shadowColor: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    xAxis: {
+                        type: 'category',
+                    },
+                    // 声明一个 Y 轴，数值轴。
+                    yAxis: {},
+                    // 声明多个 bar 系列，默认情况下，每个系列会自动对应到 dataset 的每一列。
+                    //bar：柱状图，pie饼状图，line折线图
+                    series: [
+                        {type: 'bar'},
+                    ]
+                })
+            }
+        })
+
+
+    })
+</script>
+</body>
+</html>

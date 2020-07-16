@@ -1,0 +1,41 @@
+[
+  {
+    "text": "财务管理",
+    "icon": "glyphicon glyphicon-user",
+    "backColor": "#2aabd2",
+    "color": "#ffffff",
+    "selectable": false,
+    "nodes": [
+      {
+        "text": "借款管理",
+        "href": "/moneyin"
+      },
+      {
+        "text": "放款管理",
+        "href": "/moneyout"
+      }
+    ]
+  },
+
+  {
+    "text": "金融投资管理",
+    "icon": "glyphicon glyphicon-user",
+    "selectable": false,
+    "backColor": "#2aabd2",
+    "color": "#ffffff",
+    "nodes": [
+      {
+        "text": "股票管理",
+        "href": "/companyInfo"
+      },
+      {
+        "text": "银行资产管理",
+        "href": "/companyInfo"
+      },
+      {
+        "text": "风险投资管理",
+        "href": "/companyInfo"
+      }
+    ]
+  }
+]

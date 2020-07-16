@@ -1,0 +1,30 @@
+[
+  {
+    "time": 1,
+    "money": 80
+  },
+  {
+    "time": 2,
+    "money": 50
+  },
+  {
+    "time": 3,
+    "money": 60
+  },
+  {
+    "time": 4,
+    "money": 100
+  },
+  {
+    "time": 5,
+    "money": 80
+  },
+  {
+    "time": 6,
+    "money": 60
+  },
+  {
+    "time": 7,
+    "money": 200
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {
+    "text": "人员管理",
+    "icon": "glyphicon glyphicon-user",
+    "selectable": false,
+    "backColor": "#2aabd2",
+    "color": "#ffffff",
+    "nodes": [
+      {
+        "text": "查看人员信息",
+        "href": "/userinfo"
+      }
+    ]
+  },
+  {
+    "text": "数据字典管理",
+    "icon": "glyphicon glyphicon-home",
+    "selectable": false,
+    "backColor": "#2aabd2",
+    "color": "#ffffff",
+    "nodes": [
+      {
+        "text": "数据字典管理",
+        "href": "/dicInfo"
+      }
+    ]
+  },
+  {
+    "text": "公司管理",
+    "icon": "glyphicon glyphicon-user",
+    "selectable": false,
+    "backColor": "#2aabd2",
+    "color": "#ffffff",
+    "nodes": [
+      {
+        "text": "公司归档管理",
+        "href": "/companyManager"
+      },
+      {
+        "text": "公司财务管理",
+        "href": "/financeManager"
+      }
+    ]
+  }
+
+]

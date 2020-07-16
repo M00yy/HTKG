@@ -1,0 +1,66 @@
+# SpringMVC相关功能配置
+spring:
+  http:
+    encoding:
+      enabled: true
+      charset: utf-8
+      force: true
+  # 数据源配置（使用Druid数据源）
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/financedb?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: xxxxxxxx
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialSize: 3
+    minIdle: 2
+    maxActive: 10
+  mvc:
+    view:
+      suffix: .html
+      prefix: /pages/
+  # devTools工具开启，浏览器安装必要插件后，可以自动刷新
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  thymeleaf:
+    cache: false
+
+
+# myBatis相关参数配置
+mybatis:
+  configuration:
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+    cache-enabled: true
+#  mapper-locations:
+#    - classpath: com/m00yy/db/mapper/*.xml
+  type-handlers-package: com.m00yy.entity
+
+#开启myBatis的调试功能，替换SSM项目下的log4j
+logging:
+  level:
+    com.m00yy.dao: debug
+
+#服务器是否开启压缩功能
+server:
+  compression:
+    enabled: false
+  port: 8084
+debug: false
+
+# 终端调试信息是否可查（actuator模块）
+endpoints:
+  sensitive: true
+
+
+
+
+
+
+
+
+
+

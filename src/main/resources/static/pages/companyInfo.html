@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>公司信息</title>
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
+    <script src="../jquery/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="../bootstrap-table/bootstrap-table.css">
+    <script src="../bootstrap-table/bootstrap-table.js"></script>
+    <script src="../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../toastr/toastr.min.css">
+    <script src="../toastr/toastr.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+
+    <div class="row col-sm-12">
+        <table id="mytable"></table>
+    </div>
+</div>
+<script>
+    var userid;
+
+
+    $(document).ready(function () {
+
+        initTable();
+
+
+        //初始化表格
+
+
+
+    })
+    function initTable() {
+        //销毁表格
+        $("#mytable").bootstrapTable("destroy");
+        $("#mytable").bootstrapTable({
+            url: "/com/selectAllCompanyInfo",
+            method: 'GET', //请求方式（*）
+            // queryParams: queryParams,
+            // toolbar: '#toolbar',              //工具按钮用哪个容器
+            striped: true, //是否显示行间隔色
+            cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true, //是否显示分页（*）
+            sortable: true, //是否启用排序
+            sortOrder: "asc", //排序方式
+            sidePagination: "client", //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1, //初始化加载第一页，默认第一页,并记录
+            pageSize: 5, //每页的记录行数（*）
+            pageList: [5, 10, 20], //可供选择的每页的行数（*）
+            smartDisplay: true,//显示设置每页条数
+            search: true, //是否显示表格搜索,模糊查询
+            strictSearch: false,//精确查询
+            // silent : true,// 刷新事件必须设置
+            showColumns: true, //是否显示所有的列（选择显示的列）
+            showRefresh: true, //是否显示刷新按钮
+            minimumCountColumns: 2, //最少允许的列数
+            clickToSelect: true, //是否启用点击选中行
+
+            //height: 1000,                      //表格高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "t_com_id", //每一行的唯一标识，一般为主键列
+            showToggle: false, //是否显示详细视图和列表视图的切换按钮
+            cardView: false, //是否显示详细视图
+            detailView: false, //是否显示父子表
+            clickToSelect: true,    //是否启用点击选中行
+            columns: [
+
+                {
+                    checkbox: true,
+                    width: 30,
+                },
+                {
+                    field: 't_com_name',//JSon数据中的相应的key
+                    title: '公司名称',//表头信息
+                    sortable: true,
+                    width: 100,
+                    align: 'center',
+                    valign: 'middle',
+                },
+                {
+                    field: 't_org_code',
+                    title: '公司代码',
+                    sortable: true,
+                    width: 50,
+                    align: 'center',
+                    valign: 'middle',
+
+                },
+                {
+                    field: 't_address',
+                    title: '公司地址',
+                    sortable: true,
+                    width: 150,
+                    align: 'center',
+                    valign: 'middle',
+                },
+                {
+                    field: 't_zhuceriqi',
+                    title: '注册日期',
+                    width: 50,
+                    align: 'center',
+                    sortable: true,
+                    valign: 'middle',
+                },
+                {
+                    field: 't_zhuciziben',
+                    title: '注册资本',
+                    sortable: true,
+                    width: 100,
+                    align: 'center',
+                    valign: 'middle',
+                },
+                {
+                    field: 't_faren',
+                    title: '法人代表',
+                    sortable: true,
+                    width: 100,
+                    align: 'center',
+                    valign: 'middle',
+                }
+            ]
+        })
+
+    }
+    //    表格按钮的点击事件
+    window.operateEvents = {
+        'click .comfirmeBtn': function (e, value, row, index) {
+            var uname = row.t_user_name;
+            userid = row.t_user_id;
+            //    显示模态框
+            $("#uname").text(uname);
+            $("#myModal").modal("show");
+        }
+    }
+</script>
+</body>
+</html>

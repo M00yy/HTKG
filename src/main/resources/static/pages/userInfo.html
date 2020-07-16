@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户信息</title>
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
+    <script src="../jquery/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="../bootstrap-table/bootstrap-table.css">
+    <script src="../bootstrap-table/bootstrap-table.js"></script>
+    <script src="../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../toastr/toastr.min.css">
+    <script src="../toastr/toastr.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+
+    <div class="row col-sm-12">
+        <table id="mytable"></table>
+    </div>
+</div>
+
+<!--审核弹出的模态框-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    用户审核 </h4>
+            </div>
+            <div class="modal-body">
+                用户：<label id="uname"></label>将改为已审核状态，请确认
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="confrimOk">
+                    确定
+                </button>
+            </div>
+        </div><!-- /.modal-content --></div><!-- /.modal -->
+</div>
+<!--分配权限模态框-->
+<div class="modal fade" id="myAuthModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    设置权限 </h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">权限：</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="authSelect">
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="authOk">
+                    确定
+                </button>
+            </div>
+        </div><!-- /.modal-content --></div><!-- /.modal -->
+</div>
+<script>
+    var userid;
+
+
+    $(document).ready(function () {
+
+        initTable();
+
+        $("#authOk").click(function () {
+            var auth = $("#authSelect").val();
+            $.ajax({
+                url: "/user/updateAuth",
+                type: "get",
+                dataType: "json",
+                data: {
+                    t_user_id: userid,
+                    t_role: auth
+                },
+                success: function (result) {
+                    if (result.error === 0) {
+                        toastr.success(result.msg);
+                        $("#myAuthModal").modal("hide");
+                        initTable();
+                    }
+                }
+            })
+        });
+
+        //初始化表格
+        function initTable() {
+            //销毁表格
+            $("#mytable").bootstrapTable("destroy");
+            $("#mytable").bootstrapTable({
+                url: "/user/selectAllPersonInfo",
+                method: 'GET', //请求方式（*）
+                // queryParams: queryParams,
+                // toolbar: '#toolbar',              //工具按钮用哪个容器
+                striped: true, //是否显示行间隔色
+                cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true, //是否显示分页（*）
+                sortable: true, //是否启用排序
+                sortOrder: "asc", //排序方式
+                sidePagination: "client", //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1, //初始化加载第一页，默认第一页,并记录
+                pageSize: 5, //每页的记录行数（*）
+                pageList: [5, 10, 20], //可供选择的每页的行数（*）
+                smartDisplay: true,//显示设置每页条数
+                search: true, //是否显示表格搜索,模糊查询
+                strictSearch: false,//精确查询
+                // silent : true,// 刷新事件必须设置
+                showColumns: true, //是否显示所有的列（选择显示的列）
+                showRefresh: true, //是否显示刷新按钮
+                minimumCountColumns: 2, //最少允许的列数
+                clickToSelect: true, //是否启用点击选中行
+
+                //height: 1000,                      //表格高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "t_user_id", //每一行的唯一标识，一般为主键列
+                showToggle: false, //是否显示详细视图和列表视图的切换按钮
+                cardView: false, //是否显示详细视图
+                detailView: false, //是否显示父子表
+                clickToSelect: true,    //是否启用点击选中行
+                columns: [
+
+                    {
+                        checkbox: true,
+                        width: 30,
+                    },
+                    {
+                        field: 't_user_name',//JSon数据中的相应的key
+                        title: '用户名',//表头信息
+                        sortable: true,
+                        width: 100,
+                        align: 'center',
+                        valign: 'middle',
+                    },
+                    {
+                        field: 't_name',
+                        title: '角色',
+                        sortable: true,
+                        width: 50,
+                        align: 'center',
+                        valign: 'middle',
+
+                    },
+                    {
+                        field: 't_com_name',
+                        title: '所属公司',
+                        sortable: true,
+                        width: 150,
+                        align: 'center',
+                        valign: 'middle',
+                    },
+                    {
+                        field: 't_gender',
+                        title: '性别',
+                        width: 50,
+                        align: 'center',
+                        sortable: true,
+                        valign: 'middle',
+                    },
+                    {
+                        field: 't_mobile',
+                        title: '电话',
+                        sortable: true,
+                        width: 100,
+                        align: 'center',
+                        valign: 'middle',
+                    },
+                    {
+                        field: 't_cname',
+                        title: '昵称',
+                        sortable: true,
+                        width: 100,
+                        align: 'center',
+                        valign: 'middle',
+                    },
+                    {
+                        title: '操作',
+                        width: 100,
+                        align: 'center',
+                        valign: 'middle',
+                        events: operateEvents,
+                        formatter: function (value, row, index) {
+                            //判断用户的审核状态
+                            var status = row.t_status;
+                            if (status == "1") {
+                                return "<button class='btn btn-success btn-sm' disabled>已审核</button><button class='btn btn-warning btn-sm authBtn'>权限</button>"
+                            } else {
+                                return "<button class='btn btn-danger btn-sm comfirmeBtn'>未审核</button><button class='btn btn-warning btn-sm authBtn' disabled>权限</button>"
+                            }
+                        }
+                    }
+                ]
+            })
+
+        }
+
+        $("#confrimOk").click(function () {
+            //    将需要审核的用户的id传递到服务器端
+
+            $.ajax({
+                url: "/user/changeStatus",
+                type: "post",
+                dataType: "json",
+                data: {
+                    t_user_id: userid
+                },
+
+                success: function (result) {
+                    var error = result.error;
+
+                    if (error === 0) {
+                        $("#myModal").modal("hide");
+                        initTable();
+                    } else {
+
+                    }
+
+
+                },
+                error: function (result) {
+
+                }
+            })
+        })
+
+    })
+    //    表格按钮的点击事件
+    window.operateEvents = {
+        'click .comfirmeBtn': function (e, value, row, index) {
+            var uname = row.t_user_name;
+            userid = row.t_user_id;
+            //    显示模态框
+            $("#uname").text(uname);
+            $("#myModal").modal("show");
+        },
+        'click .authBtn': function (e, value, row, index) {
+            userid = row.t_user_id;
+            $("#myAuthModal").modal("show");
+            getAuth();
+        }
+    }
+
+    function getAuth() {
+        var str = "";
+        $.ajax({
+            url: "/dic/selectAllDicInfo",
+            type: "get",
+            dataType: "json",
+            data: {
+                t_type: "权限"
+            },
+            success: function (result) {
+
+                for (var i = 0; i < result.length; i++) {
+                    str += "<option value='" + result[i].t_dic_code + "'>" + result[i].t_name + "</option>"
+                }
+                $("#authSelect").html(str);
+            }
+
+        })
+    }
+</script>
+</body>
+</html>

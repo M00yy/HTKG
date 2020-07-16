@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>公司财产管理</title>
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
+    <script src="../jquery/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="../bootstrap-table/bootstrap-table.css">
+    <script src="../bootstrap-table/bootstrap-table.js"></script>
+    <script src="../bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../toastr/toastr.min.css">
+    <script src="../toastr/toastr.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+
+    <div id="toolbar" class="row container-fluid">
+        <div class="form-inline">
+            <div class="form-group">
+                <button class="btn btn-info" id="addBtn">添加</button>
+            </div>
+
+            <div class="form-group">
+                <select class="form-control" id="myselect">
+
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-sm-12">
+        <table id="mytable"></table>
+    </div>
+</div>
+
+
+<!--添加数据字典模态框-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    添加公司财务数据 </h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">类型：</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="addModelType">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group show" id="newtypediv">
+                        <label class="col-sm-3 control-label">新类型：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="newtype"
+                                   placeholder="请输入类型名称">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">子类：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="typename"
+                                   placeholder="请输子类型名称">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="confrimOk">
+                    确定
+                </button>
+            </div>
+        </div><!-- /.modal-content --></div><!-- /.modal -->
+</div>
+<!--编辑数字字典项的模态框-->
+<div class="modal fade" id="myEditModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    编辑公司财务信息 </h4>
+            </div>
+            <div style="width: 80%">
+                <div class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">公司名字:</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="t_com_name"
+                                   placeholder="请输入公司名称">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">资产合计:</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="t_zichanheji"
+                                   placeholder="请输入资产合计">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">货币资金:</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="t_huobizijin"
+                                   placeholder="请输入货币资金">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">营收账款:</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="t_yingshouzhangkuan"
+                                   placeholder="请输入营收账款">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">固定资金:</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="t_gudingzichanheji"
+                                   placeholder="请输入固定资金">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">法人代表:</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="t_faren"
+                                   placeholder="请输入法人代表">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="editBtn">
+                        确定
+                    </button>
+                </div>
+            </div><!-- /.modal-content --></div><!-- /.modal -->
+    </div>
+    <!--删除数据字典项的模态框-->
+    <div class="modal fade" id="myDeleteModal" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title">
+                        删除数据字典项 </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-12" id="deleteLabel"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="deleteBtn">
+                        确定
+                    </button>
+                </div>
+            </div><!-- /.modal-content --></div><!-- /.modal -->
+    </div>
+    <script>
+        var codeId;
+        $(document).ready(function () {
+
+            initTable();
+        });
+
+
+        $("#editBtn").click(function () {
+            $.ajax({
+                url: "/com/updateLoan",
+                type: "post",
+                dataType: "json",
+                data: {
+                    t_com_name: $("#t_com_name").val(),
+                    t_zichanheji: $("#t_zichanheji").val(),
+                    t_huobizijin: $("#t_huobizijin").val(),
+                    t_yingshouzhangkuan: $("#t_yingshouzhangkuan").val(),
+                    t_gudingzichanheji: $("#t_gudingzichanheji").val(),
+                    t_faren: $("#t_faren").val()
+                },
+                success: function (result) {
+                    if (result.error === 0) {
+                        // alert(result.msg)
+                        // console.log(result)
+                        // alert("aaaaa");
+                        $("#myEditModal").modal("hide");
+                        toastr.success(result.msg);
+                        initTable();
+                    }
+                },
+                error: function (result) {
+                    // alert("aaa")
+                    toastr.error(result.msg);
+                }
+            })
+        });
+
+        function selectAllLoan() {
+            $.ajax({
+                url: "/com/selectAllLoan",
+                type: "post",
+                dataType: "json",
+                //接受到相应，网路通畅
+                data: {
+                    t_com_name: codeId
+                },
+                success: function (result) {
+                    // alert(JSON.stringify(result));
+                    codeId = result.t_com_name;
+                    // console.log(result);
+                    $("#t_com_name").val(result.t_com_name);
+                    $("#t_zichanheji").val(result.t_zichanheji);
+                    $("#t_huobizijin").val(result.t_huobizijin);
+                    $("#t_yingshouzhangkuan").val(result.t_yingshouzhangkuan);
+                    $("#t_gudingzichanheji").val(result.t_gudingzichanheji);
+                    $("#t_faren").val(result.t_faren);
+                },
+                error: function () {
+
+                }
+            })
+        }
+
+
+        function initTable() {
+            //销毁表格
+            $("#mytable").bootstrapTable("destroy");
+            $("#mytable").bootstrapTable({
+                url: "/com/selectLoan",
+                method: 'GET', //请求方式（*）
+                // queryParams: queryParams,
+                toolbar: '#toolbar',              //工具按钮用哪个容器
+                striped: true, //是否显示行间隔色
+                cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true, //是否显示分页（*）
+                sortable: true, //是否启用排序
+                sortOrder: "asc", //排序方式
+                sidePagination: "client", //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1, //初始化加载第一页，默认第一页,并记录
+                pageSize: 5, //每页的记录行数（*）
+                pageList: [5, 10, 20], //可供选择的每页的行数（*）
+                smartDisplay: true,//显示设置每页条数
+                search: true, //是否显示表格搜索,模糊查询
+                strictSearch: false,//精确查询
+                // silent : true,// 刷新事件必须设置
+                showColumns: true, //是否显示所有的列（选择显示的列）
+                showRefresh: true, //是否显示刷新按钮
+                minimumCountColumns: 2, //最少允许的列数
+                clickToSelect: true, //是否启用点击选中行
+
+                //height: 1000,                      //表格高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "t_com_id", //每一行的唯一标识，一般为主键列
+                showToggle: false, //是否显示详细视图和列表视图的切换按钮
+                cardView: false, //是否显示详细视图
+                detailView: false, //是否显示父子表
+                clickToSelect: true,    //是否启用点击选中行
+                columns: [
+
+                    {
+                        checkbox: true,
+                        width: 30,
+                    },
+                    {
+                        field: 't_com_name',//JSon数据中的相应的key
+                        title: '公司名称',//表头信息
+                        sortable: true,
+                        width: 100,
+                        align: 'center',
+                        valign: 'middle',
+                    },
+                    {
+                        field: 't_zichanheji',
+                        title: '资产合计',
+                        sortable: true,
+                        width: 50,
+                        align: 'center',
+                        valign: 'middle',
+
+                    }, {
+                        field: 't_huobizijin',
+                        title: '货币资金',
+                        sortable: true,
+                        width: 50,
+                        align: 'center',
+                        valign: 'middle',
+
+                    }, {
+                        field: 't_yingshouzhangkuan',
+                        title: '营收账款',
+                        sortable: true,
+                        width: 50,
+                        align: 'center',
+                        valign: 'middle',
+
+                    }, {
+                        field: 't_gudingzichanheji',
+                        title: '固定资金',
+                        sortable: true,
+                        width: 50,
+                        align: 'center',
+                        valign: 'middle',
+
+                    }, {
+                        field: 't_faren',
+                        title: '法人代表',
+                        sortable: true,
+                        width: 50,
+                        align: 'center',
+                        valign: 'middle',
+
+                    },
+                    {
+                        title: '操作',
+                        width: 100,
+                        align: 'center',
+                        valign: 'middle',
+                        events: operateEvents,
+                        formatter: function (value, row, index) {
+                            //判断用户的审核状态
+                            return "<button class='btn btn-info btn-sm updateBtn'>编辑</button>&nbsp;<button class='btn btn-warning btn-sm deleteBtn'>删除</button>"
+                        }
+                    }
+                ]
+            })
+
+        }
+
+        //    表格按钮的点击事件
+        window.operateEvents = {
+            'click .updateBtn': function (e, value, row, index) {
+                // alert(row.t_com_name);
+                codeId = row.t_com_name;
+                $("#myEditModal").modal("show");
+                selectAllLoan();
+            },
+            'click .deleteBtn': function (e, value, row, index) {
+                codeId = row.t_com_name;
+                $.ajax({
+                    url: "/com/deleteLoan",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        t_com_name: codeId
+                    },
+                    success: function (result) {
+                        if (result.error === 0) {
+                            toastr.success(result.msg);
+                            initTable();
+                        }
+                    },
+                    error: function () {
+
+                    }
+                })
+            }
+        }
+
+    </script>
+</body>
+</html>

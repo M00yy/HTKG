@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <!--    js的文件里，一定要把jquery的引用放在第一个-->
+    <script src="jquery/jquery-3.4.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap-treeview.min.css">
+    <script src="../bootstrap/js/bootstrap-treeview.min.js"></script>
+</head>
+<body>
+<!---->
+<div class="container-fluid">
+    <div class="row col-md-12" style="margin-top:20px">
+        <div class="col-md-7">
+            <h3>欢迎登录航天科工财务资产管理系统</h3>
+        </div>
+        <div class="col-md-5 pull-right">
+            <div class="pull-right">
+                <span class="glyphicon glyphicon-time"></span><label id="time"></label> &nbsp;
+                <span class="glyphicon glyphicon-user"></span>
+                欢迎您，<label id="username"></label>,<label id="tname"></label>
+                <button class="btn-default btn" id="centerBtn"><span class="glyphicon glyphicon-user"></span>个人中心
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-md-12" style="background-color: #ddd;width: 100%;height: 1px;margin-top: 10px"></div>
+    <div class="row col-md-12">
+        <!--        左侧的树形导航-->
+        <div class="col-md-3">
+            <div id="treeview"></div>
+        </div>
+        <!--        iframe,嵌在html页面中，另一个页面-->
+        <div class="col-md-9">
+            <!--            面包屑导航-->
+            <div class="row">
+                <ul class="breadcrumb" id="mybreadcrumb">
+                    <li>控制台</li>
+
+                </ul>
+            </div>
+            <div class="row embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="gotoConsole" id="myiframe" name="myiframe"></iframe>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        getUserInfo();
+
+        $("#centerBtn").click(function () {
+            $("#myiframe").attr("src", "/gotoUserCenter")
+        })
+
+
+        setInterval(function () {
+            var now = (new Date()).toLocaleString();
+            $("#time").text(now);
+        }, 1000);
+
+        function getTreeView(url) {
+            //读取本地json文件
+            $.getJSON(url, function (result) {
+                $("#treeview").treeview({
+                    data: result,
+                    collapseIcon: "",
+                    expandIcon: "",
+                    selectedBackColor: "#dddddd",
+                    onNodeSelected: function (event, data) {
+                        // alert(JSON.stringify(data));
+                        //    面包屑导航的更新
+                        var pid = $("#treeview").treeview("getNode", data.parentId);
+                        // alert("pid="+JSON.stringify(pid));
+                        $("#mybreadcrumb").html("<li><a href='gotoConsole' target='myiframe'>控制台</a></li>" +
+                            "<li>" + pid.text + "</li>" +
+                            "<li class='active'>" + data.text + "</li>")
+                        //    iframe的页面切换
+                        $("#myiframe").attr("src", data.href);
+                    }
+                })
+            })
+        }
+
+        function getUserInfo() {
+            $.ajax({
+                url: "/user/getUserInfo",
+                type: "post",
+                dataType: "json",
+                //接受到相应，网路通畅
+                success: function (result) {
+                    // alert(JSON.stringify(result));
+                    var username = result.t_user_name;
+                    var tname = result.t_name;
+                    $("#username").text(username);
+                    $("#tname").text(tname);
+                    var url = "";
+                    if (tname === "超级管理员") {
+                        url = "/json/menu_json.json";
+                    } else if (tname === "财务主管") {
+                        url = "/json/menu_json_2.json";
+                    }
+                    getTreeView(url);
+
+                },
+                error: function () {
+
+                }
+            })
+        }
+
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <!--    js的文件里，一定要把jquery的引用放在第一个-->
+    <script src="jquery/jquery-3.4.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../toastr/toastr.min.css">
+    <script src="../toastr/toastr.min.js"></script>
+</head>
+<!--作为注册页-->
+<body style="background:url('/images/bg.jpg') no-repeat;background-size: 100% 100%">
+<div class="col-md-12 row" style="margin-top: 150px;margin-bottom: 150px">
+    <div class="col-md-7"></div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                欢迎登录
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">用户名：</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="username"
+                                   placeholder="请输入用户名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">密码：</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="userpwd"
+                                   placeholder="请输入密码">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">确认密码：</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="repwd"
+                                   placeholder="请确认密码">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="panel-footer clearfix">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button class="btn btn-default" id="registerBtn">注册</button>
+                    <button class="btn btn-link" id="gotoLogin">去登陆</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        //文档就绪函数
+        $("#gotoLogin").click(function () {
+            // alert("gotoRegister");
+            //页面跳转
+            $(location).attr("href", "gotoLogin");
+        })
+        $("#registerBtn").click(function () {
+
+            if ($("#userpwd").val() !== $("#repwd").val()) {
+                alert("两次输入密码不同,请重新输入密码！")
+                $("username").val("");
+                $("#userpwd").val("");
+                $("#repwd").val("");
+            }else {
+                $.ajax({
+                    url: "/user/register",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        username: $("#username").val(),
+                        userpwd: $("#userpwd").val()
+                    },
+                    //接受到相应，网路通畅
+                    success: function (result) {
+                        // alert(JSON.stringify(result));
+                        var error = result.error;
+                        if (error === -2) {
+                            alert(result.msg);
+                            $("username").val("");
+                            $("#userpwd").val("");
+                            $("#repwd").val("");
+                        } else if (error === 0) {
+                            // alert(result.msg);
+                            $(location).attr("href", "/gotoLogin");
+                            toastr.success("注册成功,请登录");
+                        } else {
+                            alert(error.msg);
+                        }
+                    },
+                    error: function () {
+
+                    }
+                })
+            }
+        })
+    })
+
+</script>
+</body>
+</html>
